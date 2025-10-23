@@ -1,18 +1,20 @@
 {
   "name": "ultralog",
-  "version": "0.1.7",
+  "version": "1.0.0",
+  "type": "module",
   "description": "Simple opinionated logging module for NodeJs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/lib/Logger.js",
+  "types": "dist/lib/Logger.d.ts",
   "scripts": {
     "compile": "rimraf ./dist/ && tsc -b ./tsconfig.compile.json",
     "build": "tsc -b ./tsconfig.compile.json",
     "rmdist": "rimraf ./dist/",
     "test": "jest --runInBand --forceExit",
     "typecheck": "tsc -b",
-    "lint": "cross-env tslint -c tslint.json 'src/**/*.{ts,tsx}'",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
     "format": "cross-env prettier --write 'src/**/*.{ts,tsx}'",
-    "format:check": "cross-env prettier --check 'src/**/*.{ts,tsx}'"
+    "format:check": "cross-env prettier --check 'src/**/*.{ts,tsx}'",
+    "postinstall": "node -e \"console.log('\\u001b[32mThanks for installing ultralog!\\u001b[39m\\n\\u001b[34mFor AWS CloudWatch logging, please install \\u001b[39m\\u001b[33m\\'winston-cloudwatch\\'.\\u001b[39m\\n\\u001b[34mFor GCP Stackdriver logging, please install \\u001b[39m\\u001b[33m\\'@google-cloud/logging-winston\\'.\\u001b[39m')\""
   },
   "repository": {
     "type": "git",
@@ -28,25 +30,30 @@
   },
   "homepage": "https://github.com/ashubisht/ultralog#readme",
   "dependencies": {
-    "@google-cloud/logging-winston": "^3.0.6",
-    "aws-sdk": "^2.657.0",
-    "logform": "^2.1.2",
-    "winston": "^3.2.1",
-    "winston-cloudwatch": "^2.3.2"
+    "logform": "^2.7.0",
+    "winston": "^3.18.3"
+  },
+  "peerDependencies": {
+    "@google-cloud/logging-winston": "^4.0.0",
+    "winston-cloudwatch": "^3.0.0"
   },
   "devDependencies": {
-    "@types/sinon": "^9.0.0",
-    "@types/supertest": "^2.0.8",
-    "cross-env": "^7.0.2",
-    "dotenv": "^8.2.0",
-    "jest": "^25.3.0",
-    "prettier": "^2.0.4",
-    "rimraf": "^3.0.2",
-    "sinon": "^9.0.2",
-    "supertest": "^4.0.2",
-    "ts-jest": "^25.4.0",
-    "tslint": "^6.1.1",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.8.3"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.9.1",
+    "@types/sinon": "^17.0.4",
+    "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.2.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,3 +1,1 @@
-import { Logger } from "./lib/Core";
-
-export { Logger };
+export { Logger } from "./lib/Logger";

@@ -4,81 +4,88 @@ Simple opinionated logging module for NodeJs.
 
 ## Overview
 
-Ultralog is opinionated logger framework for any application. This is a wrapper module over the already established libraries to implement logger in simple 3-step code. The idea is to use minimum configuration and achieve a formatted logging output in multi-cloud regions.
+Ultralog is a simple and lightweight logging framework for any Node.js application. It provides a common wrapper for logging to various targets, including the console, files, AWS CloudWatch, and GCP Stackdriver. The library is designed to be modular, allowing you to install only the dependencies you need.
+
+## Installation
+
+```bash
+npm install ultralog
+```
 
 ## Usage
 
-This logger is applied by 3-step process.
+Here's a simple example of how to use the `Logger` class:
 
-1. Import the logger class.
-1. Supply the necessary configuration to logger class
-1. Use the logger methods available to push the logs to the server
+```typescript
+import { Logger } from "ultralog";
 
-For further configuration, two additional methods are provided:
+// Create a new logger instance
+const logger = new Logger("console");
 
-1. mapLogLevels: This method allows you to duplicate the logs over other levels. This is useful in scenario where you may want all info logs or error logs to be printed to trace logs and debug logs.
-1. setVerbose: This method allows you to print process id, gid, uid, memory usage from process instance
+// Log a message
+logger.info("Hello, world!");
+```
 
-## Code Examples
+## Transports
 
-1. Import the Logger class:
+Ultralog supports the following transports:
 
-   ```typescript
-   // Typescript
-   import { Logger } from "ultralog";
-   const logger = new Logger("aws");
-   ```
+*   `console`: Logs to the console.
+*   `file`: Logs to a file.
+*   `aws`: Logs to AWS CloudWatch.
+*   `gcp`: Logs to GCP Stackdriver.
 
-   ```JavaScript
-   // JavaScript
-   const { Logger } = require("ultralog");
-   const consoleLogger = new Logger("console");
-   ```
+You can specify the transport in the `Logger` constructor:
 
-1. Supply config (AWS Example):
+```typescript
+// Use the file transport
+const fileLogger = new Logger("file", { filename: "app.log" });
 
-   ```typescript
-   logger.configure({
-    accessKeyId: "accessKey",
-    level: "trace",
-    logGroup: "log-group",
-    logStream: "log-stream",
-    region: "aws-region",
-    secretKey: "secret"
-   });
-   ```
+// Use the AWS CloudWatch transport
+const awsLogger = new Logger("aws", {
+  logGroupName: "my-log-group",
+  logStreamName: "my-log-stream",
+  region: "us-east-1",
+  accessKeyId: "YOUR_AWS_ACCESS_KEY_ID",
+  secretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY",
+});
+```
 
-1. Set Verbosity (optional):
+## Optional Dependencies
 
-   ```typescript
-   logger.setVerbose(true);
-   ```
+To use the `aws` or `gcp` transports, you'll need to install some optional dependencies.
 
-1. Map the logging levels (optional):
+### AWS CloudWatch
 
-   ```typescript
-   logger.mapLogLevels({
-      info: ["info", "debug", "trace"],
-      debug: ["debug"],
-      trace: ["trace"],
-      error: ["error", "debug", "trace"]
-   });
-   ```
+To log to AWS CloudWatch, you'll need to install the `winston-cloudwatch` package:
 
-1. Use functions available => info/error/debug/trace
+```bash
+npm install winston-cloudwatch
+```
 
-   ```typescript
-   logger.info(
-      "file-name/service/class",
-      "function/method-name",
-      "stringified message"
-   );
-   ```
+### GCP Stackdriver
 
-The logger method takes first parameter as name of the file and class (if present), second parameter as function name, further parameters as message strings
+To log to GCP Stackdriver, you'll need to install the `@google-cloud/logging-winston` package:
+
+```bash
+npm install @google-cloud/logging-winston
+```
+
+## Verbosity
+
+You can enable verbose logging to include additional information in your log messages, such as the timestamp and log level.
+
+```typescript
+const logger = new Logger("console");
+
+// Enable verbose logging
+logger.setVerbose(true);
+
+// This will log a more detailed message
+logger.info("This is a verbose log message.");
+```
 
 ## Contribution and Issues
 
-Visit <https://github.com/ashubisht/ultralog> for more details \
-Raise issues at <https://github.com/ashubisht/ultralog/issues> \
-Read Contributions (updated soon) for code structure and development
+Visit <https://github.com/ashubisht/ultralog> for more details.
+Raise issues at <https://github.com/ashubisht/ultralog/issues>.
