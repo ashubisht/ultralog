@@ -13,6 +13,15 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
       },
+      globals: {
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        global: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,
@@ -30,11 +39,20 @@ export default [
     files: ['**/__tests__/**/*.ts'],
     languageOptions: {
       globals: {
+        // Jest globals
         describe: 'readonly',
         it: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
+        // Node globals used in tests
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        global: 'readonly',
       },
     },
   },

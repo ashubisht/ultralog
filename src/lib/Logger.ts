@@ -1,8 +1,10 @@
 import * as winston from "winston";
+import { Verbose } from "./Verbose";
 
 export class Logger {
   private logger: winston.Logger;
-  private verbose = false;
+  private verboseInfo = new Verbose();
+  private verboseFormat: "text" | "json" = "text";
 
   private constructor() {
     this.logger = winston.createLogger();
@@ -30,17 +32,34 @@ export class Logger {
   }
 
   private getFormat() {
+    if (this.verboseInfo.enabled && this.verboseFormat === "json") {
+      return winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf((info: winston.Logform.TransformableInfo) => {
+          const obj: Record<string, unknown> = {
+            timestamp: info.timestamp,
+            level: info.level,
+            message: info.message,
+            verbose: this.verboseInfo.toObject(),
+            meta: info.metadata || undefined,
+          };
+          return JSON.stringify(obj);
+        })
+      );
+    }
+
     const format = [
       winston.format.timestamp(),
       winston.format.printf((info: winston.Logform.TransformableInfo) => {
-        if (this.verbose) {
-          return `${info.timestamp} ${info.level}: ${info.message}`;
-        }
-        return `${info.timestamp} ${info.level}: ${info.message}`;
+        const base = `${info.timestamp} ${info.level}: ${info.message}`;
+        const extra = this.verboseInfo.print();
+        return extra ? `${base} | ${extra}` : base;
       }),
     ];
     return winston.format.combine(...format);
   }
+
+  // parseVerboseToObject removed in favor of Verbose.toObject()
 
   private async getTransport(
     transport: "aws" | "gcp" | "console" | "file",
@@ -76,12 +95,17 @@ export class Logger {
   }
 
   public setVerbose(isEnabled: boolean) {
-    this.verbose = isEnabled;
+    this.verboseInfo.enabled = isEnabled;
+    this.logger.format = this.getFormat();
+  }
+
+  public setVerboseFormat(format: "text" | "json") {
+    this.verboseFormat = format;
     this.logger.format = this.getFormat();
   }
 
   public isVerbose() {
-    return this.verbose;
+    return this.verboseInfo.enabled;
   }
 
   public info(message: string, ...meta: unknown[]) {
