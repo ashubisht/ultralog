@@ -1,9 +1,10 @@
 import * as winston from "winston";
-import { Verbose } from "./Verbose";
+import { Verbose } from "./Verbose.js";
+import { Transport } from "./ILogMapper.js";
 
 export class Logger {
   private logger: winston.Logger;
-  private verboseInfo = new Verbose();
+  private readonly verboseInfo = new Verbose();
   private verboseFormat: "text" | "json" = "text";
 
   private constructor() {
@@ -11,7 +12,7 @@ export class Logger {
   }
 
   public static async create(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ): Promise<Logger> {
     const logger = new Logger();
@@ -20,7 +21,7 @@ export class Logger {
   }
 
   private async initialize(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ) {
     this.logger = winston.createLogger({
@@ -62,7 +63,7 @@ export class Logger {
   // parseVerboseToObject removed in favor of Verbose.toObject()
 
   private async getTransport(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ) {
     switch (transport) {

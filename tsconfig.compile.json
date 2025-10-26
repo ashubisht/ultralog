@@ -4,7 +4,8 @@
     "noEmit": false,
     "outDir": "dist/",
     "target": "es2019",
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "node",
     "declaration": true
   }
 }

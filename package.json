@@ -38,6 +38,7 @@
     "winston-cloudwatch": "^3.0.0"
   },
   "devDependencies": {
+    "@google-cloud/logging-winston": "^4.2.4",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.9.1",
     "@types/sinon": "^17.0.4",
@@ -54,6 +55,7 @@
     "sinon": "^21.0.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "winston-cloudwatch": "^3.2.0"
   }
 }
