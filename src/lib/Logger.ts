@@ -6,6 +6,7 @@ export class Logger {
   private logger: winston.Logger;
   private readonly verboseInfo = new Verbose();
   private verboseFormat: "text" | "json" = "text";
+  private transportType: Transport = "console";
 
   private constructor() {
     this.logger = winston.createLogger();
@@ -24,6 +25,7 @@ export class Logger {
     transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ) {
+    this.transportType = transport;
     this.logger = winston.createLogger({
       level: "silly",
       format: this.getFormat(),
@@ -33,6 +35,8 @@ export class Logger {
   }
 
   private getFormat() {
+    const isConsole = this.transportType === "console";
+
     if (this.verboseInfo.enabled && this.verboseFormat === "json") {
       return winston.format.combine(
         winston.format.timestamp(),
@@ -51,6 +55,7 @@ export class Logger {
 
     const format = [
       winston.format.timestamp(),
+      ...(isConsole ? [winston.format.colorize()] : []),
       winston.format.printf((info: winston.Logform.TransformableInfo) => {
         const base = `${info.timestamp} ${info.level}: ${info.message}`;
         const extra = this.verboseInfo.print();
@@ -123,5 +128,9 @@ export class Logger {
 
   public trace(message: string, ...meta: unknown[]) {
     this.logger.silly(message, ...meta);
+  }
+
+  public warn(message: string, ...meta: unknown[]) {
+    this.logger.warn(message, ...meta);
   }
 }
