@@ -39,7 +39,6 @@
     "winston-opensearch": "^0.1.0"
   },
   "devDependencies": {
-    "@google-cloud/logging-winston": "^4.2.4",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.9.1",
     "@types/sinon": "^17.0.4",
