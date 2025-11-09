@@ -4,7 +4,7 @@ Simple opinionated logging module for NodeJs.
 
 ## Overview
 
-Ultralog is a simple and lightweight logging framework for any Node.js application. It provides a common wrapper for logging to various targets, including the console, files, AWS CloudWatch, and GCP Stackdriver. The library is designed to be modular, allowing you to install only the dependencies you need.
+Ultralog is a simple and lightweight logging framework for any Node.js application. It provides a common wrapper for logging to various targets, including the console, files, AWS CloudWatch, GCP Stackdriver, and OpenSearch. The library is designed to be modular, allowing you to install only the dependencies you need.
 
 ## Installation
 
@@ -34,6 +34,7 @@ Ultralog supports the following transports:
 *   `file`: Logs to a file.
 *   `aws`: Logs to AWS CloudWatch.
 *   `gcp`: Logs to GCP Stackdriver.
+*   `opensearch`: Logs to OpenSearch.
 
 You can specify the transport in the `Logger` constructor:
 
@@ -49,11 +50,18 @@ const awsLogger = new Logger("aws", {
   accessKeyId: "YOUR_AWS_ACCESS_KEY_ID",
   secretAccessKey: "YOUR_AWS_SECRET_ACCESS_KEY",
 });
+
+// Use the OpenSearch transport
+const opensearchLogger = new Logger("opensearch", {
+  node: "http://localhost:9200",
+  index: "logs",
+  // Additional OpenSearch configuration options
+});
 ```
 
 ## Optional Dependencies
 
-To use the `aws` or `gcp` transports, you'll need to install some optional dependencies.
+To use the `aws`, `gcp`, or `opensearch` transports, you'll need to install some optional dependencies.
 
 ### AWS CloudWatch
 
@@ -69,6 +77,14 @@ To log to GCP Stackdriver, you'll need to install the `@google-cloud/logging-win
 
 ```bash
 npm install @google-cloud/logging-winston
+```
+
+### OpenSearch
+
+To log to OpenSearch, you'll need to install the `winston-opensearch` package:
+
+```bash
+npm install winston-opensearch
 ```
 
 ## Verbosity

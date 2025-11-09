@@ -92,6 +92,15 @@ export class Logger {
             "@google-cloud/logging-winston is not installed. Please install it to use the gcp transport."
           );
         }
+      case "opensearch":
+        try {
+          const { OpensearchTransport } = await import("winston-opensearch");
+          return new OpensearchTransport(config);
+        } catch (_e) {
+          throw new Error(
+            "winston-opensearch is not installed. Please install it to use the opensearch transport."
+          );
+        }
       case "file":
         return new winston.transports.File(config);
       case "console":
