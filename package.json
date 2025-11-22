@@ -35,7 +35,27 @@
   },
   "peerDependencies": {
     "@google-cloud/logging-winston": "^4.0.0",
-    "winston-cloudwatch": "^3.0.0"
+    "winston-cloudwatch": "^3.0.0",
+    "@nestjs/common": "^10.0.0",
+    "express": "^4.18.0",
+    "fastify": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@google-cloud/logging-winston": {
+      "optional": true
+    },
+    "winston-cloudwatch": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "express": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
