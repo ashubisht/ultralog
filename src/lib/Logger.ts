@@ -1,17 +1,19 @@
 import * as winston from "winston";
-import { Verbose } from "./Verbose";
+import { Verbose } from "./Verbose.js";
+import { Transport } from "./ILogMapper.js";
 
 export class Logger {
   private logger: winston.Logger;
-  private verboseInfo = new Verbose();
+  private readonly verboseInfo = new Verbose();
   private verboseFormat: "text" | "json" = "text";
+  private transportType: Transport = "console";
 
   private constructor() {
     this.logger = winston.createLogger();
   }
 
   public static async create(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ): Promise<Logger> {
     const logger = new Logger();
@@ -20,9 +22,10 @@ export class Logger {
   }
 
   private async initialize(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ) {
+    this.transportType = transport;
     this.logger = winston.createLogger({
       level: "silly",
       format: this.getFormat(),
@@ -32,6 +35,8 @@ export class Logger {
   }
 
   private getFormat() {
+    const isConsole = this.transportType === "console";
+
     if (this.verboseInfo.enabled && this.verboseFormat === "json") {
       return winston.format.combine(
         winston.format.timestamp(),
@@ -50,6 +55,7 @@ export class Logger {
 
     const format = [
       winston.format.timestamp(),
+      ...(isConsole ? [winston.format.colorize()] : []),
       winston.format.printf((info: winston.Logform.TransformableInfo) => {
         const base = `${info.timestamp} ${info.level}: ${info.message}`;
         const extra = this.verboseInfo.print();
@@ -62,7 +68,7 @@ export class Logger {
   // parseVerboseToObject removed in favor of Verbose.toObject()
 
   private async getTransport(
-    transport: "aws" | "gcp" | "console" | "file",
+    transport: Transport,
     config?: winston.transport.TransportStreamOptions
   ) {
     switch (transport) {
@@ -84,6 +90,15 @@ export class Logger {
         } catch (_e) {
           throw new Error(
             "@google-cloud/logging-winston is not installed. Please install it to use the gcp transport."
+          );
+        }
+      case "opensearch":
+        try {
+          const { OpensearchTransport } = await import("winston-opensearch");
+          return new OpensearchTransport(config);
+        } catch (_e) {
+          throw new Error(
+            "winston-opensearch is not installed. Please install it to use the opensearch transport."
           );
         }
       case "file":
@@ -122,5 +137,9 @@ export class Logger {
 
   public trace(message: string, ...meta: unknown[]) {
     this.logger.silly(message, ...meta);
+  }
+
+  public warn(message: string, ...meta: unknown[]) {
+    this.logger.warn(message, ...meta);
   }
 }
