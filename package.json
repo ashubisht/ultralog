@@ -1,6 +1,6 @@
 {
   "name": "ultralog",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "Simple opinionated logging module for NodeJs",
   "main": "dist/lib/Logger.js",
